@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-import { Link } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 import "./feed.css";
 
 import More from "../../assets/img/more.svg";
@@ -10,6 +9,11 @@ import HeaderMain from "../../components/HeaderMain/HeaderMain";
 
 function Feed() {
   const [posts, setPosts] = useState([]);
+
+  const [pageNumber, setPageNumber] = useState(0);
+
+  const postsPerPage = 10;
+  const pagesVisited = pageNumber * postsPerPage;
 
   useEffect(() => {
     axios
@@ -23,35 +27,41 @@ function Feed() {
       });
   }, []);
 
-  function deletePost(id) {
-    axios.delete(`https://parallelum.com.br/fipe/api/v1/carros/marcas${id}`);
+  const displayPosts = posts
+    .slice(pagesVisited, pagesVisited + postsPerPage)
+    .map((post) => {
+      return (
+        <div className="user">
+          <h3>{post.codigo}</h3>
+          <h3>{post.nome}</h3>
+        </div>
+      );
+    });
 
-    setPosts(posts.filter((post) => post._id !== id));
-  }
+  const postsCount = Math.ceil(posts.length / postsPerPage);
+
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+  };
 
   return (
     <div>
       <HeaderMain />
 
-      <main>
-        <div className="cards">
-          {posts.map((post, key) => {
-            return (
-              <div className="card" key={key}>
-                <header>
-                  <h2>{post.codigo}</h2>
-                  <h2>{post.nome}</h2>
-                  <img src={More} alt="ver mais" />
-                </header>
-
-                <div className="line"></div>
-
-                <p>{post.description}</p>
-              </div>
-            );
-          })}
-        </div>
-      </main>
+      <div className="App">
+        {displayPosts}
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          pageCount={postsCount}
+          onPageChange={changePage}
+          containerClassName={"paginationBttns"}
+          previousLinkClassName={"previousBttn"}
+          nextLinkClassName={"nextBttn"}
+          disabledClassName={"paginationDisabled"}
+          activeClassName={"paginationActive"}
+        />
+      </div>
     </div>
   );
 }
