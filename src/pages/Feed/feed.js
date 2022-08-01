@@ -3,9 +3,10 @@ import axios from "axios";
 import ReactPaginate from "react-paginate";
 import "./feed.css";
 
-import More from "../../assets/img/more.svg";
-
 import HeaderMain from "../../components/HeaderMain/HeaderMain";
+import SearchBar from "../../components/SearchBar/SearchBar";
+
+import { data } from "../../components/data";
 
 function Feed() {
   const [posts, setPosts] = useState([]);

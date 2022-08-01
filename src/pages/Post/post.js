@@ -11,15 +11,18 @@ import * as yup from "yup";
 
 import "./post.css";
 
+const MARCAS_BASE_REST_API_URL =
+  "https://parallelum.com.br/fipe/api/v1/carros/marcas";
+
 const validationPost = yup.object().shape({
   title: yup
     .number()
-    .required("Você deve digitar um número")
-    .typeError("Você deve digitar um número")
+    //.required("Você deve digitar um número")
+    //.typeError("Você deve digitar um número")
     .min(300, "valor mínimo 300."),
   description: yup
     .string()
-    .required("A descrição é obrigatório")
+    //.required("A descrição é obrigatório")
     .max(150, "A descrição precisa ter menosde 150 caracteres"),
 });
 
@@ -36,7 +39,7 @@ function Post() {
 
   const addPost = (data) =>
     axios
-      .post("https://parallelum.com.br/fipe/api/v1/carros/marcas", data)
+      .post(MARCAS_BASE_REST_API_URL, data)
       .then(() => {
         console.log("Deu tudo certo");
         navigate("/");
